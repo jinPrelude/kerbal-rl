@@ -37,8 +37,8 @@ by following the instruction below :
     3. Paste the file in Ships\VAB folder.
     4. Run KSP. You could find the 'test_vehicle' in the game.
 
-3. Click the launch button to go to the launch pad.
-4. Lastly, Click the button 'Start Server' on kRPC window. If there's no any
+2. Click the launch button to go to the launch pad.
+3. Lastly, Click the button 'Start Server' on kRPC window. If there's no any
 windows named kRPC, check our if the krpc mod has successfully installed.
 
 
