@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name = 'kerbal-rl',
+    name = 'kerbal_rl',
     version = '0.1',
     description = 'Reinforcement learning environment for Kerbal Space Program',
     author = 'Uijin Jung',
