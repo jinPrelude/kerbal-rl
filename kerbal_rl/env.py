@@ -66,8 +66,10 @@ class hover_v0:
         else :
             self.step_count += 1
 
-            # Return the reward according to the distance between the target altitude and current altitude
-            self.reward = -abs(self.vessel.flight().mean_altitude - self.target_altitude)
+            # Return the reward is given proportion to the distance between the target altitude & current altitude
+            # and inverse proportion to the speed of the vehicle.
+            self.reward = -0.6 * abs(self.vessel.flight().mean_altitude - self.target_altitude) + \
+                          -0.4 * abs(self.vessel.flight().speed)
 
         time.sleep(0.085) # Computing time considered.
 
@@ -140,9 +142,10 @@ class hover_v1:
         else :
             self.step_count += 1
 
-            # Return the reward if the current altitude is between the error tolerance.
+            # Return the reward if the current altitude is between the error tolerance and the speed is 0.
             if (self.vessel.flight().mean_altitude <= self.target_altitude + self.epsilon) and \
-                    (self.vessel.flight().mean_altitude >= self.target_altitude - self.epsilon) :
+                    (self.vessel.flight().mean_altitude >= self.target_altitude - self.epsilon) and \
+                    abs(self.vessel.flight().speed) < 0.01 :
                 self.reward = 1
             else : self.reward = 0
 
