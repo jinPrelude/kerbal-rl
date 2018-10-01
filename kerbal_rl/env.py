@@ -1,7 +1,6 @@
 import krpc
 import time
 import numpy as np
-
 """
 Kerbal Space Program reinforcement learning environment
 Author : Uijin Jung
@@ -157,3 +156,11 @@ class hover_v1:
     # Return action
     def decision(self, action):
         self.vessel.control.throttle = float(action[0])
+
+envs = {
+    'hover_v0' : hover_v0,
+    'hover_v1' : hover_v1
+}
+
+def make(id) :
+    return envs[id]
