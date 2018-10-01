@@ -9,12 +9,13 @@ github : https://github.com/jinPrelude/kerbal-rl
 
 # hover_v0 returns continuous reward
 class hover_v0:
-    def __init__(self, sas=True, max_altitude = 1000, max_step=100):
+    def __init__(self, sas=True, max_altitude = 1000, max_step=100, interval = 0.085):
         self.conn = krpc.connect(name='hover')
         self.vessel = self.conn.space_center.active_vessel
         self.step_count = 0
         self.done = False
         self.reward = 0
+        self.interval = interval
         self.max_altitude = max_altitude
         self.observation_space = 1
 
@@ -70,7 +71,7 @@ class hover_v0:
             self.reward = -0.6 * abs(self.vessel.flight().mean_altitude - self.target_altitude) + \
                           -0.4 * abs(self.vessel.flight().speed)
 
-        time.sleep(0.085) # Computing time considered.
+        time.sleep(self.interval)
 
         # obs, reward, done
         return self.vessel, self.reward, self.done
@@ -81,12 +82,13 @@ class hover_v0:
 
 # hover_v1 returns sparse reward
 class hover_v1:
-    def __init__(self, sas=True, max_altitude = 1000, max_step=100, epsilon=1):
+    def __init__(self, sas=True, max_altitude = 1000, max_step=100, epsilon=1, interval = 0.085):
         self.conn = krpc.connect(name='hover')
         self.vessel = self.conn.space_center.active_vessel
         self.step_count = 0
         self.done = False
         self.reward = 0
+        self.interval = interval
         self.max_altitude = max_altitude
         self.observation_space = 1
 
@@ -148,7 +150,7 @@ class hover_v1:
                 self.reward = 1
             else : self.reward = 0
 
-        time.sleep(0.085) # Computing time considered.
+        time.sleep(self.interval)
 
         # obs, reward, done
         return (self.vessel.thrust, self.vessel.mass, self.target_altitude), self.reward, self.done
