@@ -8,7 +8,7 @@ Currently available environments are :
 - hover-v0 : Given the highest score if the rocket is hovering at the
 target altitude. target altitude is given randomly at avery episodes.
 
-- hover-v1 : Same feature with hover-v0, but the sparse is given.
+- hover-v1 : Same feature with hover-v0, but the sparse reward is given.
 
 ## Installation
 <b>To use this package, you must have Kerbal Space Program with krpc
@@ -64,13 +64,11 @@ step. It means, Although your computing time for desicion making takes
  fine-tuning the most appropriate interval.
 
 ```shell
-...
-
+import kerbal_rl
 env = kerbal_rl.make('hover-v0')
 
 # You can customize your environment like :
 env(max_step=100, max_altitude=10, sas=True, interval=0.1)
-
-...
+env.reset()
 ```
 
