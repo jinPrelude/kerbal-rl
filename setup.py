@@ -6,7 +6,7 @@ setup(
     description = 'Reinforcement learning environment for Kerbal Space Program',
     author = 'Uijin Jung',
     author_email = 'jin.Prelude@gmail.com',
-    packages = ['kerbal-rl'],
+    packages = ['kerbal_rl'],
     long_description=open('README.md').read(),
     url = 'https://github.com/jinPrelude/kerbal-rl',
     download_url = 'https://github.com/jinPrelude/kerbal-rl',
