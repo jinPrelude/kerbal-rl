@@ -13,7 +13,11 @@ target altitude. target altitude is given randomly at avery episodes.
 ## Installation
 <b>To use this package, you must have Kerbal Space Program with krpc
 mod installed.</b>
+- _For more information on Kerbal Space Program please visit
+ [here](https://www.kerbalspaceprogram.com/en/)._
 
+- _For more information on krpc please visit
+[here](https://github.com/krpc/krpc)._
 
 This code will automatically install the package.
 ```shell
@@ -24,16 +28,7 @@ pip install .
 
 ## Prerequisite
 
-1. Before to run the code, you must have Kerbal Space Program(KSP)
-with krpc mod installed.
-
-    - _For more information on Kerbal Space Program please visit
- [here](https://www.kerbalspaceprogram.com/en/)._
-
-    - _For more information on krpc please visit
-[here](https://github.com/krpc/krpc)._
-
-2. Run KSP, go to vehicle assembly building, and make your own rocket. If
+1. Run KSP, go to vehicle assembly building, and make your own rocket. If
 you are not familiar with making a rocket,
 use premade vehicle 'test_vehicle.craft' which is involved in our repo
 by following the instruction below :
