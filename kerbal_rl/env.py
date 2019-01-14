@@ -9,7 +9,7 @@ github : https://github.com/jinPrelude/kerbal-rl
 
 # hover_v0 returns continuous reward
 class hover_v0:
-    def __init__(self, sas=True, max_altitude = 1000, max_step=100, interval = 0.085):
+    def __init__(self, sas=True, max_altitude = 500, max_step=100, interval = 0.085):
         self.conn = krpc.connect(name='hover')
         self.vessel = self.conn.space_center.active_vessel
         self.step_count = 0
@@ -22,13 +22,14 @@ class hover_v0:
         # Action space : 0.0 ~ 1.0 (Thrust ratio)
         self.action_space = 1
         self.action_max = 1.
-        self.action_min = 0.0
+        self.action_min = -1.
 
         self.initial_throttle = self.action_min
 
         # Initializing
         self.sas = sas
         self.target_altitude = 100
+        self.relative_goal = self.target_altitude
         self.max_step = max_step
 
     # reset() returns target_altitude, while step() don't.
@@ -47,6 +48,8 @@ class hover_v0:
         self.target_altitude = np.random.randint(100, self.max_altitude)
 
         print('Target altitude : ', self.target_altitude)
+        self.relative_goal -= self.vessel.flight().mean_altitude
+
         self.step_count = 0
         self.done = False
         self.reward = 0
@@ -54,7 +57,7 @@ class hover_v0:
         # Launch
         self.vessel.control.activate_next_stage()
 
-        return self.vessel, self.target_altitude
+        return [self.vessel, self.vessel.flight(), self.relative_goal]
 
     def step(self, action):
         self.decision(action)
@@ -71,14 +74,20 @@ class hover_v0:
             self.reward = -0.6 * abs(self.vessel.flight().mean_altitude - self.target_altitude) + \
                           -0.4 * abs(self.vessel.flight().speed)
 
+        self.relative_goal = self.target_altitude - self.vessel.flight().mean_altitude
+
         time.sleep(self.interval)
 
         # obs, reward, done
-        return self.vessel, self.reward, self.done
+        return [self.vessel, self.vessel.flight(), self.relative_goal], self.reward, self.done, []
 
     # Return action
     def decision(self, action):
-        self.vessel.control.throttle = float(action[0])
+        action = action[0] * 0.5 + 0.5
+        self.vessel.control.throttle = float(action)
+
+    def sample_action_space(self):
+        return np.random.uniform(-1, 1, 1)
 
 # hover_v1 returns sparse reward
 class hover_v1:
@@ -131,7 +140,7 @@ class hover_v1:
         # Launch
         self.vessel.control.activate_next_stage()
 
-        return (self.vessel.thrust, self.vessel.mass, self.target_altitude)
+        return self.vessel.thrust, self.vessel.mass, self.target_altitude
 
     def step(self, action):
         self.decision(action)
