@@ -72,7 +72,8 @@ class HoverV0(gym.Env):
         state_dict = self._get_frame_infos()
         obs = self._get_obs(
             current_altitude=state_dict["altitude"],
-            vertical_vel=state_dict["vertical_vel"]
+            vertical_vel=state_dict["vertical_vel"],
+            g_force=state_dict["g-force"]
         )
         return obs, {}
 
@@ -83,7 +84,8 @@ class HoverV0(gym.Env):
         state_dict = self._get_frame_infos()
         obs = self._get_obs(
             current_altitude=state_dict["altitude"],
-            vertical_vel=state_dict["vertical_vel"]
+            vertical_vel=state_dict["vertical_vel"],
+            g_force=state_dict["g-force"]
         )
         self.reward = self._get_reward(
             current_altitude=state_dict["altitude"],
@@ -104,13 +106,15 @@ class HoverV0(gym.Env):
     def _get_frame_infos(self) -> Dict[str, float]:
         return {
             "altitude": self.vessel.flight().mean_altitude,
-            "vertical_vel": self.vessel.flight(self.ref_frame).velocity[0]
+            "vertical_vel": self.vessel.flight(self.ref_frame).velocity[0],
+            "g-force": self.vessel.flight().g_force
         }
 
     def _get_obs(
             self,
             current_altitude: float,
             vertical_vel: float,
+            g_force: float
         ) -> np.ndarray:
         altitude_difference = self.target_altitude - current_altitude
 
@@ -118,13 +122,15 @@ class HoverV0(gym.Env):
         normalized_target_altitude = self.target_altitude / self.max_altitude
         normalized_altitude_difference = altitude_difference / self.max_altitude
         normalized_speed = vertical_vel / self.max_speed
+        normalized_gforce = g_force / 10.0
 
         obs = np.array(
             [
             normalized_current_altitude,
             normalized_target_altitude,
             normalized_altitude_difference,
-            normalized_speed
+            normalized_speed,
+            normalized_gforce
             ], dtype=np.float32
         )
         return obs
@@ -138,11 +144,10 @@ class HoverV0(gym.Env):
 
         altitude_difference = self.target_altitude - current_altitude
         normalized_altitude_difference = altitude_difference / self.max_altitude
-        normalized_speed = vertical_vel / self.max_speed
         if (current_altitude > self.max_altitude) or (abs(vertical_vel) > self.max_speed):
-            reward = -10
+            reward = -50
         else:
-            reward = -0.8 * abs(normalized_altitude_difference) + -0.2 * abs(normalized_speed)
+            reward = -abs(normalized_altitude_difference)
         return reward
 
     def _check_done(self, current_altitude: float, vertical_vel: float) -> bool:
