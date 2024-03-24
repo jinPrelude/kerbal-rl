@@ -144,10 +144,12 @@ class HoverV0(gym.Env):
 
         altitude_difference = self.target_altitude - current_altitude
         normalized_altitude_difference = altitude_difference / self.max_altitude
+        normalized_speed = vertical_vel / self.max_speed
         if (current_altitude > self.max_altitude) or (abs(vertical_vel) > self.max_speed):
-            reward = -50
+            reward = -2000
         else:
-            reward = -abs(normalized_altitude_difference)
+            reward = 0.8 * -abs(normalized_altitude_difference) + 0.2 * -abs(normalized_speed)
+            # reward 
         return reward
 
     def _check_done(self, current_altitude: float, vertical_vel: float) -> bool:
