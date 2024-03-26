@@ -1,1 +1,1 @@
-from kerbal_rl.env import *
+from kerbal_rl.envs.hover import HoverV0
